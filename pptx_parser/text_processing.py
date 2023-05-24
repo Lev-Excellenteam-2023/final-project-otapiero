@@ -1,30 +1,26 @@
 """
  this file is used to process the text in the pptx file
 """
+from typing import List
 
 
-def process_pptx_file_content ( pptx_file_content: list[list[str, str, str]] ) -> list[list[str]]:
+def process_pptx_slide_content(pptx_slide_content: List[str]) -> str:
     """
     process text from a pptx file content to make it ready for analysis.
 
-    :param pptx_file_content: list of lists, each list contains title, text and notes of a slide.
-    :return: list of lists, each list contains title, text and notes of a slide as one string.
+    :param pptx_slide_content: list of one slide content,title, text and notes.
+    :return: str, processed text.
     """
-    processed_pptx_file_content = []
-    for slide in pptx_file_content:
-        if slide[0] == "" and slide[1] == "" and slide[2] == "":
-            continue
-        slide_title = process_text(slide[0])
-        slide_text = process_text(slide[1])
-        slide_notes = process_text(slide[2])
-        slide_content = ["Slide Title: " + slide_title + "\n", "Slide Text: " + slide_text + "\n",
-                         "Slide Notes: " + slide_notes + "\n"]
-        processed_pptx_file_content.append(slide_content)
 
-    return processed_pptx_file_content
+    slide_title = process_text(pptx_slide_content[0])
+    slide_text = process_text(pptx_slide_content[1])
+    slide_notes = process_text(pptx_slide_content[2])
+    slide_content = "Slide Title: " + slide_title + "\n" + "Slide Text: " + slide_text + "\n" + \
+                    "Slide Notes: " + slide_notes + "\n"
+    return slide_content
 
 
-def process_text ( text: str ) -> str:
+def process_text(text: str) -> str:
     """
     process text to make it ready for analysis.
 
