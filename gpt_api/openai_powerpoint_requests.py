@@ -1,7 +1,6 @@
 """
- This file is used to send requests for PowerPoint files to the openai api.
+This module contains functions for sending requests for PowerPoint slides to the OpenAI API.
 """
-from typing import List, Dict
 
 import openai
 import logging
@@ -10,40 +9,21 @@ from gpt_api.PromptPptxBuilder import PresentationPromptBuilder
 from gpt_api.openai_requests import send_request
 
 
-async def get_powerpoint_explanation(powerpoint_file_content: List[List[str]]) -> List[Dict[str, str]]:
+async def get_powerpoint_explanation(slide_content: str) -> str:
     """
     Send a request to the OpenAI API.
 
-    :param powerpoint_file_content: The PowerPoint file content to send.
+    :param slide_content: The slide  content to explain.
     :return: The response text.
     """
-    prompt_builder = PresentationPromptBuilder(powerpoint_file_content)
+    prompt_builder = PresentationPromptBuilder()
     try:
-        for prompt in prompt_builder:
-            response = await send_request(prompt)
-            prompt_builder.update_prompt(response)
+        prompt = prompt_builder.get_prompt(slide_content)
+        response = await send_request(prompt)
+        return response
     except openai.OpenAIError as e:
         logging.error(f"OpenAI API Error: {str(e)}")
         raise
-    return prompt_builder.get_prompt()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 '''
@@ -52,7 +32,7 @@ import openai
 from gpt_api.PromptPptxBuilder import PresentationPromptBuilder
 from pptx_parser.slide_text_extractor import get_pptx_file_content
 
-pptx_file_path = r"C:\Users\ouriel\Desktop\End of course exercise - kickof - upload.pptx"
+pptx_file_path = r"C:\\Users\\ouriel\\Desktop\\End of course exercise - kickof - upload.pptx"
 pptx_file_content = get_pptx_file_content(pptx_file_path)
 print("---------------------------------------------------------------------")
 prompt = PresentationPromptBuilder(pptx_file_content)

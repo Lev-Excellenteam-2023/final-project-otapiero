@@ -22,6 +22,7 @@ async def send_request(prompt:  List[Dict[str, str]]) -> str:
             messages=prompt
         )
         logging.info(response['usage']['total_tokens'])
+        print(response['usage']['total_tokens'])
         return extract_response(response)
     except openai.OpenAIError as e:
         logging.error(f"OpenAI API Error: {str(e)}")
@@ -43,3 +44,6 @@ def init_openai_api():
     Initialize the OpenAI API.
     """
     openai.api_key = os.environ.get('OPENAI_API_KEY', "")
+
+
+init_openai_api()

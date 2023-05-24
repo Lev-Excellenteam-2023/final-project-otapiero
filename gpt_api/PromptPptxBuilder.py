@@ -5,88 +5,59 @@ class PresentationPromptBuilder:
     """
     A class for building a prompt to ask the GPT API to interpret and explain a PowerPoint presentation.
 
-    Attributes: - prompt (List[Dict[str, str]]): A list of dictionaries representing the prompt, with each dictionary
-    representing a slide. - slide_content (List[List[str]]): A list of lists containing the title, text, and notes of
-    each slide.
+    Attributes:
+        prompt (List[Dict[str, str]]): A list of dictionaries representing the prompt, with each dictionary
+            representing a slide.
 
     Methods:
-    - build_prompt(): Builds the initial prompt.
-    - parse_next_slide(): Parses the next slide from the `slide_content` attribute.
-    - update_prompt(response: str): Updates the prompt with the response from the GPT API.
-    - get_prompt(): Returns the current prompt.
+        __init__(): Initializes the PresentationPromptBuilder class.
+        create_initial_prompt(): Creates the initial prompt.
+        update_prompt(slide_content: str) -> None: Updates the prompt with the slide content.
+        get_prompt(slide_content: str) -> List[Dict[str, str]]: Updates and return the prompt.
     """
 
-    def __init__ ( self, slide_content: List[List[str]] ):
+    def __init__(self):
         """
-        Initializes the `PromptBuilder` instance with a list of slide content.
-
-        :param slide_content: A list of lists containing the title, text, and notes of each slide.
+        Initializes the PresentationPromptBuilder class.
         """
-        self.slide_content = slide_content
-        self.prompts = self.create_prompt()
+        self.prompt = []
+        self.create_initial_prompt()
 
-    def create_prompt ( self ) -> List[Dict[str, str]]:
+    def create_initial_prompt(self):
         """
         Creates the initial prompt.
 
-        :return: A list of dictionaries representing the prompt.
+        :return: None
         """
-        prompts = [{
-            "role": "system", "content": f"you are a helpful AI that is explaining a PowerPoint presentation."}
+        prompt = [
+            {
+                "role": "system",
+                "content": "you are a helpful AI that is explaining a PowerPoint presentation. Note: "
+                           "your responses should only contain the explanation of the slide."
+            },
+            {
+                "role": "user",
+                "content": ""
+            }
         ]
-        slides = "".join([f"{slide[0]}{slide[1]}{slide[2]}" for slide in self.slide_content])
-        prompts.append({"role": "user", "content": "here is a PowerPoint presentation:" + slides +
-                                                   "\nplease explain this slide: " + self.slide_content[0][0] +
-                                                   self.slide_content[0][1] + self.slide_content[0][2]})
-        self.slide_content.pop(0)
-        return prompts
+        self.prompt = prompt
 
-    def get_next_slide ( self ) -> Dict[str, str]:
+    def update_prompt(self, slide_content: str) -> None:
         """
-        Gets the next slide.
+        Updates the prompt with the slide content.
 
-        :return: A dictionary representing the next slide.
+        :param slide_content: The slide content to add to the prompt.
+        :return: None
         """
-        if len(self.slide_content) > 0:
-            next_slide = self.slide_content.pop(0)
-            return {"role": "user", "content": "please explain this slide: " + next_slide[0] + next_slide[1] +
-                                               next_slide[2]}
-        else:
-            return {"role": "system", "content": "No more slides to explain."}
+        self.prompt[-1]["content"] = "here is a slide from a PowerPoint presentation: please explain this slide: " + \
+                                     slide_content
 
-    def update_prompt ( self, response: str ) -> None:
-        """
-        Updates the prompt with the response from the GPT API and gets the next slide.
-
-        :param response: The response from the GPT API.
-        """
-        # Update the prompt with the response from the GPT API
-        self.prompts.append({"role": "assistant", "content": response})
-
-        # Get the next slide and add it to the prompt
-        if len(self.slide_content) > 0:
-            self.prompts.append(self.get_next_slide())
-        else:
-            self.prompts.insert(-1, {"role": "system", "content": "No more slides to explain."})
-
-    def get_prompt(self) -> List[Dict[str, str]]:
+    def get_prompt(self, slide_content: str) -> List[Dict[str, str]]:
         """
         Returns the current prompt.
 
+        :param slide_content: The slide content to add to the prompt.
         :return: A list of dictionaries representing the prompt.
         """
-        return self.prompts
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        """
-        Returns the current prompt.
-        :return: A list of dictionaries representing the prompt.
-        """
-        if len(self.slide_content) > 0:
-            return self.get_prompt()
-        else:
-            raise StopIteration
-
+        self.update_prompt(slide_content)
+        return self.prompt
