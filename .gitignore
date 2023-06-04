@@ -1,2 +1,7 @@
 .idea/
 pptx_parser/__pycache__/
+/.env
+app/__pycache__/
+gpt_api/__pycache__/
+json_outpout/__pycache__/
+.env

@@ -4,6 +4,8 @@ import openai
 import os
 import logging
 
+from app import input_util
+
 """
 This file is used to send requests to the openai api. 
 """
@@ -17,7 +19,8 @@ async def send_request(prompt:  List[Dict[str, str]]) -> str:
     :return: The response text.
     """
     try:
-        response = await openai.ChatCompletion.create(
+        print(prompt)
+        response =  openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=prompt
         )
@@ -36,14 +39,18 @@ def extract_response(response: Dict) -> str:
     :param response: The response dictionary.
     :return: The response text.
     """
-    return response['choices'][0]['text']
+    print("response: "+response['choices'][0]['message']['content'])
+    return response['choices'][0]['message']['content']
+
 
 
 def init_openai_api():
     """
     Initialize the OpenAI API.
     """
-    openai.api_key = os.environ.get('OPENAI_API_KEY', "")
+    if 'OPENAI_API_KEY' in os.environ:
+        openai.api_key = os.environ.get('OPENAI_API_KEY', "")
+    else:
+        openai.api_key = input_util.set_api_key()
 
 
-init_openai_api()
