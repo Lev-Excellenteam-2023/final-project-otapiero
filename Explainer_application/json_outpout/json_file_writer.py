@@ -54,9 +54,10 @@ def save_content_to_json_file(json_file_path: str, file_name: str, list_content:
 
 
 if __name__ == "__main__":
-    import pptx_parser.slide_text_extractor as slide_text_extractor
+    import Explainer_application.pptx_parser.slide_text_extractor as slide_text_extractor
 
     pptx_file_path = r"C:\Users\ouriel\Desktop\End of course exercise - kickof - upload.pptx"
-    pptx_file_content = slide_text_extractor.get_pptx_file_content(pptx_file_path)
+    slide_extractor = slide_text_extractor.SlideTextExtractor(pptx_file_path=pptx_file_path)
+    pptx_file_content = [slide for slide in slide_extractor]
     # save content to json file
     save_content_to_json_file(r"C:\Users\ouriel\Desktop", "end of course exercise kickof upload", pptx_file_content)

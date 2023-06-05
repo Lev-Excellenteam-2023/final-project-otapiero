@@ -4,9 +4,9 @@ import os
 import argparse
 import sys
 
-from gpt_api.openai_powerpoint_requests import get_powerpoint_explanation
-from json_outpout.json_file_writer import save_content_to_json_file
-from pptx_parser.slide_text_extractor import SlideTextExtractor
+from Explainer_application.gpt_api.openai_powerpoint_requests import get_powerpoint_explanation
+from Explainer_application.json_outpout.json_file_writer import save_content_to_json_file
+from Explainer_application.pptx_parser.slide_text_extractor import SlideTextExtractor
 # Add current directory to Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
@@ -47,7 +47,7 @@ async def explain_pptx(pptx_file_path: str, folder_result_path: str, file_name: 
         slide_text_extractor = SlideTextExtractor(pptx_file_path)
 
         coroutines = (get_powerpoint_explanation(slide) for slide in slide_text_extractor)
-        responses = asyncio.run(asyncio.gather(*coroutines))
+        responses = await asyncio.gather(*coroutines)
 
         save_content_to_json_file(folder_result_path, file_name, list(responses))
     except Exception as e:

@@ -1,12 +1,11 @@
 """
  this file is used to extract text from pptx file
 """
-from typing import List
 
 import pptx
 
-from pptx_parser import pptx_reader
-from pptx_parser import text_processing
+from Explainer_application.pptx_parser import text_processing, pptx_reader
+
 
 class SlideTextExtractor:
     """

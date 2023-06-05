@@ -5,8 +5,8 @@ This module contains functions for sending requests for PowerPoint slides to the
 import openai
 import logging
 
-from gpt_api.PromptPptxBuilder import PresentationPromptBuilder
-from gpt_api.openai_requests import send_request
+from Explainer_application.gpt_api.PromptPptxBuilder import PresentationPromptBuilder
+from Explainer_application.gpt_api.openai_requests import send_request
 
 
 async def get_powerpoint_explanation(slide_content: str) -> str:
