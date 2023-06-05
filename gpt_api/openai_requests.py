@@ -4,7 +4,7 @@ import openai
 import os
 import logging
 
-from app import input_util
+from Explainer_application import input_util
 
 """
 This file is used to send requests to the openai api. 
