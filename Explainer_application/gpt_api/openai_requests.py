@@ -19,17 +19,15 @@ async def send_request(prompt:  List[Dict[str, str]]) -> str:
     :return: The response text.
     """
     try:
-        print(prompt)
         response =  openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=prompt
         )
         logging.info(response['usage']['total_tokens'])
-        print(response['usage']['total_tokens'])
         return extract_response(response)
     except openai.OpenAIError as e:
         logging.error(f"OpenAI API Error: {str(e)}")
-        raise
+
 
 
 def extract_response(response: Dict) -> str:
@@ -39,7 +37,6 @@ def extract_response(response: Dict) -> str:
     :param response: The response dictionary.
     :return: The response text.
     """
-    print("response: "+response['choices'][0]['message']['content'])
     return response['choices'][0]['message']['content']
 
 
