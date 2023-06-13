@@ -5,3 +5,5 @@ Explainer_application/__pycache__/
 Explainer_application/gpt_api/__pycache__/
 Explainer_application/json_outpout/__pycache__/
 .env
+files_handler/__pycache__/
+wep_api/__pycache__/

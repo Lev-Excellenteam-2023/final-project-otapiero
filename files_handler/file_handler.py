@@ -3,6 +3,7 @@ This module is used to handle files.
 
 """
 import os
+from typing import List
 
 from files_handler.FileStatus import FileStatus
 
@@ -58,12 +59,69 @@ def get_file_status(file_name: str) -> FileStatus:
     """
     try:
         # if the file do not exist in uploads folder, return NOT_FOUND
-        if not file_exist(file_name, folder_name=FILE_UPLOADS_PATH):
+        if not file_uid_exist(file_name, folder_name=FILE_UPLOADS_PATH):
             return FileStatus.NOT_FOUND
         # if the file do not exist in outputs folder, return PENDING
-        if not file_exist(file_name, folder_name=FILE_OUTPUT_PATH):
+        if not file_uid_exist(file_name, folder_name=FILE_OUTPUT_PATH):
             return FileStatus.PENDING
         # if the file exist in outputs folder, return DONE
         return FileStatus.DONE
     except OSError as e:
         raise OSError(f"Invalid file path: '{file_name}' ({e})")
+
+
+def get_file_list(folder_name: str = FILE_UPLOADS_PATH) -> List[str]:
+    """
+    Get the list of files in the folder.
+    :param folder_name: str, name of the folder.
+    :return: list, list of files.
+    """
+    try:
+        return os.listdir(folder_name)
+    except OSError as e:
+        raise OSError(f"Invalid folder path: '{folder_name}' ({e})")
+
+
+def delete_file(file_name: str, folder_name: str = FILE_UPLOADS_PATH):
+    """
+    Delete a file from the file storage.
+    :param folder_name: str, name of the folder.
+    :param file_name: str, name of the file.
+    :return: None.
+    """
+    try:
+        os.remove(os.path.join(folder_name, file_name))
+    except OSError as e:
+        raise OSError(f"Invalid file path: '{file_name}' ({e})")
+
+
+def file_uid_exist(uid: str, folder_name: str = FILE_UPLOADS_PATH) -> bool:
+    """
+    Check if a file with the uid exist in the folder.
+    :param folder_name: str, name of the folder.
+    :param uid: str, uid of the file.
+    :return: bool, True if the file exist, False otherwise.
+    """
+    try:
+        for file_name in get_file_list(folder_name):
+            if uid == file_name.split("_")[-1]:
+                return True
+        return False
+    except OSError as e:
+        raise OSError(f"Invalid folder path: '{folder_name}' ({e})")
+
+
+def get_file_name(uid: str, folder_name: str = FILE_UPLOADS_PATH) -> str:
+    """
+    Get the file name from the uid.
+    :param folder_name: str, name of the folder.
+    :param uid: str, uid of the file.
+    :return: str, name of the file.
+    """
+    try:
+        for file_name in get_file_list(folder_name):
+            if uid == file_name.split("_")[-1]:
+                return file_name
+        return ""
+    except OSError as e:
+        raise OSError(f"Invalid folder path: '{folder_name}' ({e})")
