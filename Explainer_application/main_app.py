@@ -33,8 +33,6 @@ async def cli_main():
         logging.error(f"Error: {str(e)}")
 
 
-
-
 async def explain_pptx(pptx_file_path: str, folder_result_path: str, file_name: str):
     """
     Process a PowerPoint file and extract explanations for each slide.
