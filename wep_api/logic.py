@@ -1,5 +1,6 @@
 import datetime
 import json
+import logging
 from typing import Dict
 
 import files_handler.file_handler as fh
@@ -15,7 +16,7 @@ def create_file(uid: str, file_name: str, file_content: bytes):
     :return: None.
     """
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    new_filename = f"{file_name}_{timestamp}_{uid}"
+    new_filename = f"{file_name.split('.')[0]}_{timestamp}_{uid}"
 
     try:
         if not fh.file_exist(new_filename):
@@ -23,6 +24,8 @@ def create_file(uid: str, file_name: str, file_content: bytes):
             return True
         else:
             raise FileExistsError(f"File '{new_filename}' already exists.")
+    except ValueError as e:
+        logging.error(e)
     except OSError as e:
         raise OSError(f"Invalid file path: '{file_name}' ({e})")
 
@@ -46,7 +49,7 @@ def get_original_file_name(file_name : str) -> str:
     :param file_name: str, name of the file.
     :return: str, original file name.
     """
-    return "_".join(file_name.split("_")[:-1])
+    return file_name.split('_')[0] + ".pptx"
 def get_timestamp(file_name : str) -> str:
     """
     Get the timestamp from the file name.
@@ -76,5 +79,7 @@ def create_response(uid: str) -> Dict[str, str]:
                     "timestamp": get_timestamp(file_name), "explanation": None}
         elif status == FileStatus.NOT_FOUND:
             raise FileNotFoundError(f"File '{uid}' not found.")
+    except FileNotFoundError as e:
+        raise e
     except OSError as e:
         raise OSError(f"Invalid file path: '{uid}' ({e})")

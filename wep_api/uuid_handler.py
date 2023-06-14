@@ -1,7 +1,6 @@
 
 import uuid
 
-generated_uuids = []
 
 
 def generate_uid():
@@ -9,7 +8,6 @@ def generate_uid():
     Generate a unique identifier (UID) using UUID version 4 and store it in memory.
     """
     uid = str(uuid.uuid4())
-    generated_uuids.append(uid)
     return uid
 
 
@@ -22,8 +20,6 @@ def is_valid_uid( uid ):
 
     try:
         uuid_obj = uuid.UUID(uid)
-        if uid in generated_uuids:
-            return True
-        return False
+        return True
     except ValueError:
         return False

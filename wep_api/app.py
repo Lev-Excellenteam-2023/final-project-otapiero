@@ -43,11 +43,12 @@ def status():
         uid = request.args.get('uid')
         response = logic.create_response(uid)
         return jsonify(response)
-    except FileExistsError as e:
+    except FileNotFoundError as e:
         abort(404)
     except OSError as e:
         logging.error(e)
         print(e)
+        abort(500)
 
 
 if __name__ == '__main__':
