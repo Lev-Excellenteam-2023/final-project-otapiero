@@ -28,9 +28,7 @@ def process_text(text: str) -> str:
     :return:
         str, processed text.
     """
-    # Remove extra spaces
-    text = text.split()
-    text = ' '.join(text)
+    text = text.strip()
 
     # Remove special characters
     special_chars = ['\n', '\t', '\r', '\f', '\v']
