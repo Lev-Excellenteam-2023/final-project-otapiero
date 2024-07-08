@@ -53,3 +53,5 @@ def status():
 
 if __name__ == '__main__':
     app.run()
+#curl -X POST -F "file=@C:/Users/ouriel/Desktop/End of course exercise - kickof - upload.pptx" http://localhost:5000/upload
+#curl -X GET http://localhost:5000/status?uid=0e8e2b2e-0b0b-4b0e-9b0a-0b0b0b0b0b0b

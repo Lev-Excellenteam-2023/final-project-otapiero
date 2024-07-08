@@ -7,6 +7,7 @@ import files_handler.file_handler as fh
 from files_handler.FileStatus import FileStatus
 from uuid_handler import is_valid_uid
 
+
 def create_file(uid: str, file_name: str, file_content: bytes):
     """
     Create a file in the file storage.
@@ -50,6 +51,8 @@ def get_original_file_name(file_name : str) -> str:
     :return: str, original file name.
     """
     return file_name.split('_')[0] + ".pptx"
+
+
 def get_timestamp(file_name : str) -> str:
     """
     Get the timestamp from the file name.
@@ -57,6 +60,7 @@ def get_timestamp(file_name : str) -> str:
     :return: str, timestamp.
     """
     return file_name.split("_")[-2]
+
 
 def create_response(uid: str) -> Dict[str, str]:
     """
@@ -69,8 +73,9 @@ def create_response(uid: str) -> Dict[str, str]:
             raise FileNotFoundError(f"File '{uid}' not found.")
         status = get_file_status(uid)
         file_name = fh.get_file_name(uid)
+
         if status == FileStatus.DONE:
-            file_response = json.dumps(fh.get_file(uid).decode("utf-8"))
+            file_response = json.dumps(fh.get_file(file_name=file_name + ".json",folder_name_key="outputs").decode("utf-8"))
             return {"status": "done", "filename": get_original_file_name(file_name),
                     "timestamp": get_timestamp(file_name), "explanation": file_response}
 
